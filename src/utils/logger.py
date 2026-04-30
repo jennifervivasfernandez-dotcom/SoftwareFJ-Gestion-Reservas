@@ -10,7 +10,6 @@ import os         # Para manejo de rutas y carpetas
 from datetime import datetime   # Para obtener fecha y hora actual
 
 
-
 # --------------------------------------------------------------
 # CONFIGURACIÓN DE RUTAS
 # Calcula automáticamente dónde guardar el archivo de logs
@@ -84,7 +83,7 @@ if not logger.handlers:
 # Funciones simples para usar el logger desde cualquier módulo
 # --------------------------------------------------------------
 
-def registrar_ifo(mensaje):
+def registrar_info(mensaje):
     """Registra un evento informativo normal.
     Ejemplo: cliente creado, reserva confirmada."""
     logger.info(mensaje)
@@ -107,11 +106,11 @@ def registrar_error(mensaje, excepcion=None):
         logger.error(mensaje)
 
 
-def registrar_critico(mensaje, excepción=None):
+def registrar_critico(mensaje, excepcion=None):
     """Registra un error crítico - algo muy grave que
     puede comprometer el sistema."""
-    if excepción:
-        logger.critical(f"{mensaje} | Detalle: {excepción}")
+    if excepcion:
+        logger.critical(f"{mensaje} | Detalle: {excepcion}")
     else:
         logger.critical(mensaje)
 
