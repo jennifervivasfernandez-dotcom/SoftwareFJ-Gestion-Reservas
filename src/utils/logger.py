@@ -48,7 +48,7 @@ logger = logging.getLogger("SistemaFJ")
 
 # Establecer el nivel mínimo de mensajes a registrar
 # DEBUG = registra absolutamente todo
-logger.setLever(logging.DEBUG)
+logger.setLevel(logging.DEBUG)
 
 # Evita duplicar mensajes si el logger ya fue configurado
 if not logger.handlers:
@@ -59,7 +59,7 @@ if not logger.handlers:
         RUTA_ARCHIVO_LOG,
         encoding="utf-8"   # Para soportar tildes y ñ
     )
-    manejador_archivo.satLevel(logging.DEBUG)
+    manejador_archivo.setLevel(logging.DEBUG)
     manejador_archivo.setFormatter(
         logging.Formatter(FORMATO_LOG, FORMATO_FECHA)
     )
