@@ -74,7 +74,8 @@ class ServicioInvalidoError (ErrorSistemaFJ):
 
     def __str__(self):
         if self. servicio:
-            return f"[Error SRV-001] {self.mensaje}"
+            return f"[Error SRV-001] '{self.mensaje}' : {self.mensaje}"
+        return f"[Error SVR-001] {self.mensaje}"
 
 
 class ServicioNoDisponibleError (ErrorSistemaFJ):
@@ -134,7 +135,7 @@ class ReservaCanceladaError (ErrorSistemaFJ):
 
     def __init__(self, id_reserva):
         mensaje = f"La reserva '{id_reserva}' ya fue cancelada"
-        super().__init__(mensaje, codigo="REA-003")
+        super().__init__(mensaje, codigo="RES-003")
         self.id_reserva = id_reserva
 
 
