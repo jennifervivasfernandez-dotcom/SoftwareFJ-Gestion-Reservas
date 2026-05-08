@@ -16,6 +16,7 @@ from servicios.asesoria import Asesoria, TIPOS_ASESORIA
 from servicios.alquiler_equipo import AlquilerEquipo, TIPOS_EQUIPO
 from servicios.reserva_sala import ReservaSala
 from servicios.servicio import Servicio
+from utils.logger import registrar_error
 
 """
 Este archivo contiene pruebas unitarias (unittest) para validar:
@@ -30,6 +31,13 @@ Importante:
   - lanzan excepciones personalizadas cuando corresponde
   - calculan tarifas/costos según reglas de negocio
 """
+
+def _loggear_excepcion_prueba(contexto: str, exc: Exception) -> None:
+    """
+    Helper para la rúbrica: si en una prueba provocamos un error "a propósito",
+    lo registramos en el log y aun así seguimos con la ejecución.
+    """
+    registrar_error(f"Prueba (caso inválido) detectó error en: {contexto}", exc)
 
 
 # Test de Jaime
@@ -48,21 +56,30 @@ class TestCliente(unittest.TestCase):
 
     def test_email_sin_arroba(self):
         """Caso inválido: email sin '@' debe lanzar `ClienteInvalidoError` con campo=email."""
-        with self.assertRaises(ClienteInvalidoError) as ctx:
+        try:
             Cliente("Bob", "bobinvalido.com", "3001234567", "123")
-        self.assertEqual(ctx.exception.campo, "email")
+            self.fail("Se esperaba ClienteInvalidoError")
+        except ClienteInvalidoError as e:
+            _loggear_excepcion_prueba("Cliente.email sin '@'", e)
+            self.assertEqual(e.campo, "email")
 
     def test_telefono_con_letras(self):
         """Caso inválido: teléfono con letras debe lanzar `ClienteInvalidoError` con campo=telefono."""
-        with self.assertRaises(ClienteInvalidoError) as ctx:
+        try:
             Cliente("Carla", "c@mail.com", "300abc1234", "12345678")
-        self.assertEqual(ctx.exception.campo, "telefono")
+            self.fail("Se esperaba ClienteInvalidoError")
+        except ClienteInvalidoError as e:
+            _loggear_excepcion_prueba("Cliente.telefono con letras", e)
+            self.assertEqual(e.campo, "telefono")
 
     def test_documento_no_numerico(self):
         """Caso inválido: documento no numérico debe lanzar `ClienteInvalidoError` con campo=documento."""
-        with self.assertRaises(ClienteInvalidoError) as ctx:
+        try:
             Cliente("Dana", "d@mail.com", "3001234567", "ABC123")
-        self.assertEqual(ctx.exception.campo, "documento")
+            self.fail("Se esperaba ClienteInvalidoError")
+        except ClienteInvalidoError as e:
+            _loggear_excepcion_prueba("Cliente.documento no numérico", e)
+            self.assertEqual(e.campo, "documento")
 
 
 class TestReservaSala(unittest.TestCase):
@@ -74,8 +91,11 @@ class TestReservaSala(unittest.TestCase):
 
     def test_capacidad_invalida(self):
         """Capacidad 0 debe lanzar `ServicioInvalidoError`."""
-        with self.assertRaises(ServicioInvalidoError):
+        try:
             ReservaSala("Sala X", 0)
+            self.fail("Se esperaba ServicioInvalidoError")
+        except ServicioInvalidoError as e:
+            _loggear_excepcion_prueba("ReservaSala.capacidad inválida", e)
 
 
 class TestAlquilerEquipo(unittest.TestCase):
@@ -88,8 +108,11 @@ class TestAlquilerEquipo(unittest.TestCase):
 
     def test_tipo_invalido(self):
         """Tipo de equipo fuera del catálogo debe lanzar `ServicioInvalidoError`."""
-        with self.assertRaises(ServicioInvalidoError):
+        try:
             AlquilerEquipo("X", "tractor")
+            self.fail("Se esperaba ServicioInvalidoError")
+        except ServicioInvalidoError as e:
+            _loggear_excepcion_prueba("AlquilerEquipo.tipo inválido", e)
 
 
 class TestAsesoria(unittest.TestCase):
@@ -121,13 +144,19 @@ class TestAsesoria(unittest.TestCase):
 
     def test_rango_invalido(self):
         """Rango no permitido debe lanzar `ServicioInvalidoError`."""
-        with self.assertRaises(ServicioInvalidoError):
+        try:
             Asesoria("X", "legal", "ninja")
+            self.fail("Se esperaba ServicioInvalidoError")
+        except ServicioInvalidoError as e:
+            _loggear_excepcion_prueba("Asesoria.rango inválido", e)
 
     def test_tipo_invalido(self):
         """Tipo de asesoría no permitido debe lanzar `ServicioInvalidoError`."""
-        with self.assertRaises(ServicioInvalidoError):
+        try:
             Asesoria("Pack", "cocina")
+            self.fail("Se esperaba ServicioInvalidoError")
+        except ServicioInvalidoError as e:
+            _loggear_excepcion_prueba("Asesoria.tipo inválido", e)
 
 
 class TestServicio(unittest.TestCase):
@@ -151,15 +180,21 @@ class TestServicio(unittest.TestCase):
     def test_horas_negativas(self):
         """Horas <= 0 deben lanzar `CostoInvalidoError`."""
         s = ReservaSala("Sala", 5)
-        with self.assertRaises(CostoInvalidoError):
+        try:
             s.calcular_costo(-1)
+            self.fail("Se esperaba CostoInvalidoError")
+        except CostoInvalidoError as e:
+            _loggear_excepcion_prueba("Servicio.calcular_costo horas inválidas", e)
 
     def test_servicio_no_disponible(self):
         """Si el servicio está marcado no disponible, calcular costo debe lanzar `ServicioNoDisponibleError`."""
         s = ReservaSala("Sala", 4)
         s.marcar_no_disponible()
-        with self.assertRaises(ServicioNoDisponibleError):
+        try:
             s.calcular_costo(1)
+            self.fail("Se esperaba ServicioNoDisponibleError")
+        except ServicioNoDisponibleError as e:
+            _loggear_excepcion_prueba("Servicio no disponible al calcular costo", e)
 #Fin de pruebas de Jaime
 
 def ejecutar_simulacion() -> bool:
