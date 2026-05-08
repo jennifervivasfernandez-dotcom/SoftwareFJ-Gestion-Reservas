@@ -33,7 +33,7 @@ def main():
 
     except Exception as e:
         registrar_error("Error crítico en el sistema", e)
-        print(f"\n❌ Error crítico: {e}")
+        print(f"\nError critico: {e}")
         sys.exit(1)
 
     finally:

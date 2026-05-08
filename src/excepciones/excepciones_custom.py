@@ -73,9 +73,9 @@ class ServicioInvalidoError (ErrorSistemaFJ):
         self.servicio = servicio
 
     def __str__(self):
-        if self. servicio:
-            return f"[Error SRV-001] '{self.mensaje}' : {self.mensaje}"
-        return f"[Error SVR-001] {self.mensaje}"
+        if self.servicio:
+            return f"[Error SRV-001] servicio '{self.servicio}': {self.mensaje}"
+        return f"[Error SRV-001] {self.mensaje}"
 
 
 class ServicioNoDisponibleError (ErrorSistemaFJ):
@@ -83,11 +83,11 @@ class ServicioNoDisponibleError (ErrorSistemaFJ):
     la fecha o condiciones solicitadas. """
 
     def __init__(self, nombre_servicio, motivo=None):
-        mensaje = f"El servicio '{nombre_servicio}' no estás disponible"
+        mensaje = f"El servicio '{nombre_servicio}' no está disponible"
         if motivo:
-            mensaje += f". Motivo:{motivo}"
-            super().__init__(mensaje, codigo="SRV-002")
-            self.nombre_servicio = nombre_servicio
+            mensaje += f". Motivo: {motivo}"
+        super().__init__(mensaje, codigo="SRV-002")
+        self.nombre_servicio = nombre_servicio
 
 
 class CostoInvalidoError (ErrorSistemaFJ):

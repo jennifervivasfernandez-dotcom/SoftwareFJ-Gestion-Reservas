@@ -16,8 +16,8 @@ from datetime import datetime   # Para obtener fecha y hora actual
 # sin importar desde qué carpeta se ejecute el programa.
 # --------------------------------------------------------------
 
-# Obtiene la ruta de la carpeta raíz del proyecto
-RUTA_RAIZ = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
+# Obtiene la ruta de la carpeta raíz del proyecto (…/src/utils/logger.py → raíz)
+RUTA_RAIZ = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
 
 # Construye la ruta completa a la carpeta logs/
 RUTA_LOGS = os.path.join(RUTA_RAIZ, "logs")
