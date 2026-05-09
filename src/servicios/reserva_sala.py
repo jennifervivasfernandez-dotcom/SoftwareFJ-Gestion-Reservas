@@ -65,7 +65,7 @@ class ReservaSala(Servicio):
 
     def validar(self) -> bool:
         """
-        Valida la sala (capacidad + reglas base del servicio).
+        valida la sala (capacidad + reglas base del servicio).
 
         Retorna:
         - `True` si está válido.
