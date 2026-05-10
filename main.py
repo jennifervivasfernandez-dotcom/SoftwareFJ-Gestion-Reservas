@@ -1,7 +1,7 @@
 # ========================================================================
 # MODULO: main.py
 # DESCRIPCION: Punto de entrada principal del sistema Software FJ.
-#              Ejecuta las pruebas base y la simulacion de reservas.
+#              Ejecuta las pruebas base y la simulacion integral V2.
 # ========================================================================
 
 import os
@@ -19,7 +19,7 @@ sys.path.insert(0, os.path.abspath(
 ))
 
 from simulacion import ejecutar_simulacion
-from simulacion_reservas import ejecutar_simulacion_reservas
+from simulacion_v2 import ejecutar_simulacion_v2
 from utils.logger import registrar_error, registrar_info
 
 
@@ -33,8 +33,8 @@ def main():
         # Primero se ejecutan las pruebas que ya validan clientes y servicios.
         ejecutar_simulacion()
 
-        # Luego se ejecuta la parte de reservas y operaciones completas.
-        ejecutar_simulacion_reservas()
+        # Luego se ejecutan las 15 operaciones integrales solicitadas.
+        ejecutar_simulacion_v2()
 
     except Exception as error:
         registrar_error("Error critico en el sistema", error)
